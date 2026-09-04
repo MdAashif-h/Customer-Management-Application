@@ -1,0 +1,3 @@
+import type { NextAuthConfig } from "next-auth";
+
+export default { providers: [], session: { strategy: "jwt" }, pages: { signIn: "/login" }, callbacks: { authorized: ({ auth }) => Boolean(auth), jwt({ token, user }) { if (user) token.role = user.role; return token; }, session({ session, token }) { if (session.user) { session.user.id = token.sub ?? ""; session.user.role = token.role; } return session; } } } satisfies NextAuthConfig;

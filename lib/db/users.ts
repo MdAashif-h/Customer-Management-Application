@@ -1,0 +1,6 @@
+import { prisma } from "@/lib/db/prisma";
+import { auth } from "@/auth";
+import { hasPermission } from "@/lib/permissions";
+import type { Role } from "@/lib/permissions";
+export async function getUsers() { const session = await auth(); if (!session?.user?.id || !hasPermission(session.user.role, "users.read")) throw new Error("FORBIDDEN"); return prisma.user.findMany({ select: { id: true, name: true, email: true, role: true, createdAt: true, updatedAt: true }, orderBy: { createdAt: "desc" } }); }
+export async function changeUserRole(id: string, role: Role) { const session = await auth(); if (!session?.user?.id || !hasPermission(session.user.role, "roles.manage")) throw new Error("FORBIDDEN"); if (id === session.user.id) throw new Error("SELF_ROLE"); const current = await prisma.user.findUniqueOrThrow({ where: { id } }); return prisma.$transaction(async (tx) => { const user = await tx.user.update({ where: { id }, data: { role } }); await tx.activity.create({ data: { actorUserId: session.user.id, action: "User role changed", entityType: "user", entityId: id, metadata: { oldRole: current.role, newRole: role } } }); return user; }); }

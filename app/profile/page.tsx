@@ -1,0 +1,3 @@
+import Link from "next/link";
+import { auth } from "@/auth";
+export default async function ProfilePage() { const session = await auth(); if (!session) return null; return <main className="dashboard-page admin-page"><div className="admin-message"><h1>{session.user.name ?? "Profile"}</h1><p>{session.user.email}<br />Role: {session.user.role}</p><Link href="/dashboard">Back to dashboard</Link></div></main>; }

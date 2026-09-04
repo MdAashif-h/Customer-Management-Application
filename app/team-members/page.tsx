@@ -1,0 +1,5 @@
+import { auth } from "@/auth";
+import { hasPermission } from "@/lib/permissions";
+import { getSupabaseTeamMembers } from "@/lib/supabase/workspace";
+import { TeamMembersPage } from "@/components/team/team-members-page";
+export default async function TeamMembersRoute() { const session = await auth(); if (!session || !hasPermission(session.user.role, "users.read")) return <main className="dashboard-page workspace-error"><div><h1>You don&apos;t have permission to access this page.</h1><p>Only authorized administrators can manage team members.</p></div></main>; try { return <TeamMembersPage canManage={hasPermission(session.user.role, "roles.manage")} members={await getSupabaseTeamMembers()} />; } catch { return <main className="dashboard-page workspace-error"><div><h1>Something went wrong</h1><p>We couldn&apos;t load team members.</p></div></main>; } }

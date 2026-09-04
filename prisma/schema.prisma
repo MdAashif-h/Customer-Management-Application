@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  passwordHash  String
+  role          String    @default("USER")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  customersCreated Customer[] @relation("createdBy")
+  customersUpdated Customer[] @relation("updatedBy")
+  activities    Activity[]
+}
+
+model Customer {
+  id              String         @id @default(cuid())
+  name            String
+  email           String
+  company         String
+  phone           String?
+  jobTitle        String?
+  status          String         @default("ACTIVE")
+  location        String?
+  preferredContact String?
+  notes           String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  createdById     String
+  updatedById     String
+  createdBy       User           @relation("createdBy", fields: [createdById], references: [id])
+  updatedBy       User           @relation("updatedBy", fields: [updatedById], references: [id])
+  activities      Activity[]
+  @@index([name])
+  @@index([email])
+  @@index([company])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Activity {
+  id          String   @id @default(cuid())
+  actorUserId String
+  action      String
+  entityType  String
+  entityId    String
+  metadata    String?
+  createdAt   DateTime @default(now())
+  actor       User     @relation(fields: [actorUserId], references: [id])
+  customerId  String?
+  customer    Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  @@index([entityId, createdAt])
+}

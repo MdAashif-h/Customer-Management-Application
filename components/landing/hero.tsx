@@ -1,0 +1,7 @@
+import Link from "next/link";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+export function Hero() {
+  return <section className="px-5 pb-20 pt-36 text-center sm:pt-44 lg:pb-28 lg:pt-52"><div className="mx-auto max-w-3xl"><p className="animate-rise mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--line)] px-3 py-1.5 text-xs font-semibold text-[var(--accent)]"><span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />A clearer way to work with customers</p><h1 className="animate-rise text-4xl font-extrabold leading-[1.08] tracking-[-0.06em] sm:text-6xl lg:text-7xl">Manage customers.<br /><span className="text-[var(--accent)]">Build better relationships.</span></h1><p className="animate-rise-delay mx-auto mt-7 max-w-xl text-base leading-7 text-[var(--muted)] sm:text-lg">Keep your customer data organized, searchable, and accessible — all in one simple workspace.</p><div className="animate-rise-delay mt-9 flex flex-col justify-center gap-3 sm:flex-row"><Button asChild><Link href="/login">Get started <ArrowUpRight size={16} /></Link></Button><Button asChild variant="outline"><a href="#preview">View demo <ArrowDown size={15} /></a></Button></div></div></section>;
+}

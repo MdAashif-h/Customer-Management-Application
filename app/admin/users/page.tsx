@@ -1,0 +1,4 @@
+import Link from "next/link";
+import { auth } from "@/auth";
+import { hasPermission } from "@/lib/permissions";
+export default async function AdminUsersPage() { const session = await auth(); if (!session || !hasPermission(session.user.role, "users.read")) return <main className="dashboard-page admin-page"><div className="admin-message"><h1>You don&apos;t have permission to access this page.</h1><Link href="/dashboard">Back to dashboard</Link></div></main>; return <main className="dashboard-page admin-page"><div className="admin-message"><h1>User management</h1><p>Administrator user management is ready for database-backed records.</p><Link href="/dashboard">Back to dashboard</Link></div></main>; }
